@@ -17,6 +17,7 @@ builder.Services
                 NameClaimType = "client_id",
                 ValidateAudience = false
             };
+            options.Validate();
         })
         .AddJwtBearer("azuread", options =>
         {
@@ -27,6 +28,7 @@ builder.Services
                 NameClaimType = "appid",
                 ValidateIssuer = !bool.TryParse(builder.Configuration["Authentication:ValidateIssuer"], out var validateIssuer) || validateIssuer, // Azure AD tokens have invalid issuer, according to the OIDC metadata
             };
+            options.Validate();
         })
         ;
 
