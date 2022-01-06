@@ -3,6 +3,7 @@
 
 
 using IdentityServer4.Models;
+using System;
 using System.Collections.Generic;
 
 namespace idp
@@ -39,7 +40,32 @@ namespace idp
 
                             // scopes that client has access to
                             AllowedScopes = { "api1" }
-                        }
+                        },
+                new Client
+                        {
+                            ClientId = "fancy_client",
+
+                            // no interactive user, use the clientid/secret for authentication
+                            AllowedGrantTypes = new List<string> { "fancy" },
+                    
+                            RequireClientSecret = false, // Make optional?
+
+                            // secret for authentication
+                            ClientSecrets =
+                            {
+                                new Secret("secret".Sha256())
+                            },
+
+                            // scopes that client has access to
+                            AllowedScopes = { "api1" }
+                        },
             };
+
+        public static ICollection<string> FancyGrants()
+        {
+            var grantTypes = GrantTypes.ClientCredentials;
+            grantTypes.Add("fancy");
+            return grantTypes;
+        }
     }
 }
