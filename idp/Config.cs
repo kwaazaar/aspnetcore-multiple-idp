@@ -19,7 +19,8 @@ namespace idp
         public static IEnumerable<ApiScope> ApiScopes =>
             new ApiScope[]
             {
-                new ApiScope("api1", "My API")
+                new ApiScope("api1", "My API1", userClaims: new string[] { "user_id", "nonexisting" }),
+                new ApiScope("api2", "My API2")
             };
 
         public static IEnumerable<Client> Clients =>
@@ -29,8 +30,15 @@ namespace idp
                         {
                             ClientId = "client",
 
+                            AllowOfflineAccess = true, // Sends refresh token (unless a specific scope was specified)
+                            UpdateAccessTokenClaimsOnRefresh = true,
+
                             // no interactive user, use the clientid/secret for authentication
                             AllowedGrantTypes = GrantTypes.ClientCredentials,
+
+                            // Claims only works for client_credentials, unless: AlwaysSendClientClaims = true,
+                            // Claims will be prefixed with "client_", change with ClientClaimsPrefix
+                            Claims = new List<ClientClaim> { new ClientClaim ("always_included", "1"), },
 
                             // secret for authentication
                             ClientSecrets =
@@ -39,16 +47,19 @@ namespace idp
                             },
 
                             // scopes that client has access to
-                            AllowedScopes = { "api1" }
+                            AllowedScopes = { "api1", "api2" }
                         },
                 new Client
                         {
                             ClientId = "fancy_client",
 
+                            AllowOfflineAccess = true, // Sends refresh token (unless a specific scope was specified)
+                            UpdateAccessTokenClaimsOnRefresh = true,
+
                             // no interactive user, use the clientid/secret for authentication
                             AllowedGrantTypes = new List<string> { "fancy" },
                     
-                            RequireClientSecret = false, // Make optional?
+                            RequireClientSecret = false, // Make optional (secret is ignored when specified): only for public/untrusted clients -> usually other types of credentials are provided in the token request as well
 
                             // secret for authentication
                             ClientSecrets =
@@ -57,15 +68,8 @@ namespace idp
                             },
 
                             // scopes that client has access to
-                            AllowedScopes = { "api1" }
+                            AllowedScopes = { "api1", "api2" }
                         },
             };
-
-        public static ICollection<string> FancyGrants()
-        {
-            var grantTypes = GrantTypes.ClientCredentials;
-            grantTypes.Add("fancy");
-            return grantTypes;
-        }
     }
 }
