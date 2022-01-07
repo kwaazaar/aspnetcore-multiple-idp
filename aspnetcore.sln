@@ -9,7 +9,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "weblib", "weblib\weblib.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "idp", "idp\idp.csproj", "{C3B6C281-342D-437A-BE85-0C3FB4000B66}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "idp.testconsole", "idp.testconsole\idp.testconsole.csproj", "{6C147CB8-5B67-4E13-B359-8A61078706B6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "idp.testconsole", "idp.testconsole\idp.testconsole.csproj", "{6C147CB8-5B67-4E13-B359-8A61078706B6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{CF11BC2B-807D-406B-BEB9-1C199C5AA3DE}"
+	ProjectSection(SolutionItems) = preProject
+		README.MD = README.MD
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
