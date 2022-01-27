@@ -1,7 +1,12 @@
+using CoreWCF;
+using CoreWCF.Configuration;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using web.auth.AuthPolicies;
+using web.auth.BasicAuth;
+using web.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services
     .AddAuthentication() // No default scheme, so authentication is not done automatically: Authorize-attribute must now be present and (default) policy must now specify schemes
+        .AddBasicAuthentication()
         .AddJwtBearer("idp", options =>
         {
             options.MetadataAddress = "https://localhost:5001/.well-known/openid-configuration";
@@ -32,30 +38,29 @@ builder.Services
         })
         ;
 
-builder.Services.AddAuthorization(options =>
-{
-    options.DefaultPolicy = new AuthorizationPolicyBuilder()
-        .AddAuthenticationSchemes("idp", "azuread") // Try authenticate with these schemes
-        .RequireAssertion(_ => true) // Always true, so everyone passed, including unauthenticated
-        .Build();
+var allSchemes = new string[] { BasicAuthenticationHandler.DefaultScheme, "idp", "azuread" };
 
-    options.AddPolicy("IsAuthenticated", policy =>
-    {
-        policy
-            .AddAuthenticationSchemes("idp", "azuread")
-            .AddRequirements(new AuthenticatedUserRequirement());
-    });
-});
+builder.Services.AddAuthorization(options => options // Enable authorization and set default policy to require authenticated user
+    .AddApiAuthorizationPolicy(allSchemes) // Try authenticate with all schemes, instead of just the default
+    .AddUserAuthorizationPolicy(allSchemes) // Try authenticate with all schemes, instead of just the default
+    );
 
-builder.Services.AddSingleton<IAuthorizationHandler, AuthenticatedUserHandler>();
+builder.Services.AddAuthorizationHandlers(); // Implementation of requirements used in policies
 
-builder.Services.AddControllers();
+builder.Services.AddServiceModelServices();
+
+builder.Services.AddSignalR();
+
+builder.Services.AddControllers().
+    AddApplicationPart(typeof(TestController).Assembly);
+
+builder.Services.AddRazorPages();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
     {
-        c.SwaggerDoc("v1", new OpenApiInfo { Title = "IreckonU Rfm Api", Version = "v1" });
+        c.SwaggerDoc("v1", new OpenApiInfo { Title = "IreckonU Secured Api", Version = "v1" });
 
         // Seurity config taken from: https://codeburst.io/api-security-in-swagger-f2afff82fb8e
         // (Swagger documentation is very extensive and without useful examples)
@@ -89,10 +94,25 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();
+
+app.UseServiceModel(builder =>
+{
+    builder.ConfigureServiceHostBase<Calculator>(host =>
+    {
+        // All kinds of metadata
+        //host.Description.Behaviors.Add(new ServiceMetadataBehavior { HttpGetEnabled = true });
+    });
+    builder
+        .AddService<Calculator>()
+        .AddServiceEndpoint<Calculator, ICalculator>(new BasicHttpBinding(), "http://localhost/basicHttpUserPassword");
+});
 
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.MapHub<ChatHub>("/chathub");
+app.MapRazorPages();
 app.MapControllers();
 
 app.Run();

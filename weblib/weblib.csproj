@@ -8,4 +8,12 @@
 	  <FrameworkReference Include="Microsoft.AspNetCore.App" />    
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="System.ServiceModel.Primitives" Version="4.9.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\web.auth\web.auth.csproj" />
+  </ItemGroup>
+
 </Project>
