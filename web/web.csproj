@@ -17,4 +17,10 @@
     <ProjectReference Include="..\weblib\weblib.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Secrets\Passwords.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

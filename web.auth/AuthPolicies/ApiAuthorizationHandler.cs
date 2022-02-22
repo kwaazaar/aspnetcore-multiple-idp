@@ -24,7 +24,7 @@ namespace web.auth.AuthPolicies
                 var descriptor = _httpContextAccessor.HttpContext.GetEndpoint().Metadata.GetMetadata<ControllerActionDescriptor>();
                 // ControllerName: Test, ControllerTypeInfo.Name: TestController, ActionName: GetSecured
 
-                if (descriptor.ControllerTypeInfo.Name == "TestController" && descriptor.ActionName == "GetSecured")
+                if (descriptor.ControllerTypeInfo.Name == "TestController" && descriptor.ActionName.StartsWith("GetSecured"))
                 {
                     context.Succeed(requirement);
                 }

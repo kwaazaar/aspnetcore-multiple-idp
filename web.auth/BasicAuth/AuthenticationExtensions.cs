@@ -4,9 +4,6 @@ namespace web.auth.BasicAuth
 {
     public static class AuthenticationExtensions
     {
-        public static AuthenticationBuilder AddBasicAuthentication(this AuthenticationBuilder authBuilder)
-            => AddBasicAuthentication(authBuilder, BasicAuthenticationHandler.DefaultScheme);
-
         public static AuthenticationBuilder AddBasicAuthentication(this AuthenticationBuilder authBuilder, string authenticationScheme)
             => AddBasicAuthentication(authBuilder, authenticationScheme, "https://localhost");
 
