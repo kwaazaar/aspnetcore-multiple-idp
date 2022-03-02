@@ -11,19 +11,26 @@ using System.Runtime.Caching;
 using Microsoft.Extensions.Logging;
 using System.Reflection;
 using System.IO;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 
+//[CustomApiVersion("1-core")]
 [ApiController]
 [ApiAuthorisationFilter]
+[ApiExplorerSettings(IgnoreApi =false)]
 [Route("[controller]")]
 public class TestController : ControllerBase
 {
-    public TestController(ILogger<TestController> logger)
+    public TestController(ILogger<TestController> logger, IApiVersionDescriptionProvider provider, IApiDescriptionGroupCollectionProvider apiExplorer)
     {
         this._logger = logger;
+        this.provider = provider;
+        this.apiExplorer = apiExplorer;
     }
 
     private static readonly MemoryCache _theCache = new MemoryCache("X");
     private readonly ILogger<TestController> _logger;
+    private readonly IApiVersionDescriptionProvider provider;
+    private readonly IApiDescriptionGroupCollectionProvider apiExplorer;
 
     [HttpGet(Name = "GetInts")]
     [AllowAnonymous]
@@ -87,25 +94,14 @@ public class TestController : ControllerBase
     [AllowAnonymous]
     public ActionResult GetInfo()
     {
-        var filename = Path.Combine(Path.Combine(AppContext.BaseDirectory, "Secrets"),"Passwords.txt");
-        string passwords;
-        try
-        {
-            passwords = System.IO.File.ReadAllText(filename);
-        }
-        catch (Exception ex)
-        {
-            passwords = "Cannot read passwords: " + ex.ToString();
-        }
-
         return Ok(new
         {
             AppContext.BaseDirectory,
             Environment.ProcessPath,
             Environment.CurrentDirectory,
             Assembly.GetExecutingAssembly().Location,
-            Filename = filename,
-            Passwords = passwords,
+            provider.ApiVersionDescriptions,
+            ApiDescriptionGroups = apiExplorer.ApiDescriptionGroups.Items.SelectMany(g => g.Items.Select(i => new { i.GroupName, i.HttpMethod, i.RelativePath })),
         });
     }
 

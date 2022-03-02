@@ -1,7 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
+using web.auth;
 
 namespace web.Controllers;
-
+[CustomApiVersion("1-core")]
 [ApiController]
 [Route("[controller]")]
 public class WeatherForecastController : ControllerBase

@@ -2,8 +2,14 @@ using CoreWCF;
 using CoreWCF.Channels;
 using CoreWCF.Configuration;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.SwaggerGen;
+using web;
+using web.auth;
 using web.auth.AuthPolicies;
 using web.auth.BasicAuth;
 using web.auth.WCF;
@@ -58,40 +64,52 @@ builder.Services.AddControllers().
 builder.Services.AddRazorPages();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c =>
-    {
-        c.SwaggerDoc("v1", new OpenApiInfo { Title = "IreckonU Secured Api", Version = "v1" });
+//builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddApiVersioning(options =>
+{
+    // reporting api versions will return the headers "api-supported-versions" and "api-deprecated-versions"
+    options.ReportApiVersions = true;
 
-        // Seurity config taken from: https://codeburst.io/api-security-in-swagger-f2afff82fb8e
-        // (Swagger documentation is very extensive and without useful examples)
+    // allow a client to call you without specifying an api version
+    // since we haven't configured it otherwise, the assumed api version will be 1.0
+    options.AssumeDefaultVersionWhenUnspecified = true;
 
-        // OAuth2 JWT
-        var securityScheme = new OpenApiSecurityScheme
-        {
-            Name = "JWT Authentication",
-            Description = "Enter JWT Bearer token **_only_**",
-            In = ParameterLocation.Header,
-            Type = SecuritySchemeType.Http, //
-            Scheme = "bearer", // must be lower case
-            BearerFormat = "JWT",
-            Reference = new OpenApiReference
-            {
-                Id = JwtBearerDefaults.AuthenticationScheme,
-                Type = ReferenceType.SecurityScheme
-            }
-        };
-        c.AddSecurityDefinition(securityScheme.Reference.Id, securityScheme);
-        c.AddSecurityRequirement(new OpenApiSecurityRequirement { { securityScheme, Array.Empty<string>() } });
-    });
+    options.DefaultApiVersion = new ApiVersion(1, 0, "unspecified");
+});
+builder.Services.AddVersionedApiExplorer(options =>
+{
+    // add the versioned api explorer, which also adds IApiVersionDescriptionProvider service
+    // note: the specified format code will format the version as "'v'major[.minor][-status]"
+    options.GroupNameFormat = "V-'unspecified'"; // "'v'VVV"
+
+    // note: this option is only necessary when versioning by url segment. the SubstitutionFormat
+    // can also be used to control the format of the API version in route templates
+    options.SubstituteApiVersionInUrl = true;
+});
+
+builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
+
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 //if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    //app.UseSwagger();
+    //app.UseSwaggerUI();
+
+    app.UseSwagger(options => { options.RouteTemplate = "swagger/{documentName}/docs.json"; });
+    app.UseSwaggerUI(options =>
+    {
+        var provider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
+        options.RoutePrefix = "swagger";
+
+        foreach (var description in provider.ApiVersionDescriptions)
+        {
+            options.SwaggerEndpoint($"/swagger/{description.GroupName}/docs.json", description.GroupName);
+        }
+    });
 }
 
 app.UseHttpsRedirection();

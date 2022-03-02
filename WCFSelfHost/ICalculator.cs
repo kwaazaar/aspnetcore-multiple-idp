@@ -17,7 +17,7 @@ namespace WCFSelfHost
         int AddComplex(TwoInts ints);
     }
 
-    [DataContract]
+    [DataContract(Namespace = "urn://calc.fancy")]
     public class TwoInts
     {
         [DataMember]

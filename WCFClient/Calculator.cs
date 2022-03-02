@@ -15,7 +15,7 @@ namespace WCFSelfHost
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="TwoInts", Namespace="http://schemas.datacontract.org/2004/07/WCFSelfHost")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="TwoInts", Namespace="urn://calc.fancy")]
     public partial class TwoInts : object, System.Runtime.Serialization.IExtensibleDataObject
     {
         
