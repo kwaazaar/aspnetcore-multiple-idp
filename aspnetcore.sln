@@ -22,15 +22,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WCFSelfHost", "WCFSelfHost\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WCFClient", "WCFClient\WCFClient.csproj", "{5361F04D-7EFF-47DC-8E01-BC1E515EE651}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrpcGreeter", "GrpcGreeter\GrpcGreeter.csproj", "{7842F8C1-CD68-456B-9F8F-1670CCDEDFFF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GrpcGreeter", "GrpcGreeter\GrpcGreeter.csproj", "{7842F8C1-CD68-456B-9F8F-1670CCDEDFFF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrpcGreeterClient", "GrpcGreeterClient\GrpcGreeterClient.csproj", "{9FA15AAA-55CC-4292-9A2D-7E7AD33851A3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GrpcGreeterClient", "GrpcGreeterClient\GrpcGreeterClient.csproj", "{9FA15AAA-55CC-4292-9A2D-7E7AD33851A3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Contracts", "Shared.Contracts\Shared.Contracts.csproj", "{A89E6807-3EAE-4687-8629-7393C05E5092}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared.Contracts", "Shared.Contracts\Shared.Contracts.csproj", "{A89E6807-3EAE-4687-8629-7393C05E5092}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrpcGreeterCodeFirst", "GrpcGreeterCodeFirst\GrpcGreeterCodeFirst.csproj", "{72A2B17B-44C2-44D2-AE3F-000C4C9C4D18}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GrpcGreeterCodeFirst", "GrpcGreeterCodeFirst\GrpcGreeterCodeFirst.csproj", "{72A2B17B-44C2-44D2-AE3F-000C4C9C4D18}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrpcGreeterClientCodeFirst", "GrpcGreeterClientCodeFirst\GrpcGreeterClientCodeFirst.csproj", "{133B2117-5FCA-4F22-B6FB-E40A38531F66}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GrpcGreeterClientCodeFirst", "GrpcGreeterClientCodeFirst\GrpcGreeterClientCodeFirst.csproj", "{133B2117-5FCA-4F22-B6FB-E40A38531F66}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

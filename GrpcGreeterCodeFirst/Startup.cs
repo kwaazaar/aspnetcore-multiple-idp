@@ -1,5 +1,7 @@
 ﻿using GrpcGreeterCodeFirst.Services;
 using ProtoBuf.Grpc.Server;
+using Shared.Contracts;
+using System.Reflection;
 
 namespace GrpcGreeterCodeFirst
 {
@@ -43,6 +45,7 @@ namespace GrpcGreeterCodeFirst
             app.UseGrpcWeb(new GrpcWebOptions { DefaultEnabled = true }); // Must be added between UseRouting and UseEndpoints (https://docs.microsoft.com/en-us/aspnet/core/grpc/browser?view=aspnetcore-6.0#configure-grpc-web-in-aspnet-core)
 
             app.UseCors();
+
 
             // Configure the HTTP request pipeline.
             app.UseEndpoints(endpoints => {

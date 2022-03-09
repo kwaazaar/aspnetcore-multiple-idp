@@ -1,6 +1,6 @@
 ﻿using IdentityModel.Client;
 
-namespace Client
+namespace idp.testconsole
 {
     public class Program
     {
@@ -25,7 +25,7 @@ namespace Client
                 ClientSecret = "secret",
 
                 Scope = "api1",
-                ClientCredentialStyle  = ClientCredentialStyle.PostBody
+                ClientCredentialStyle = ClientCredentialStyle.PostBody
             });
 
             if (tokenResponse.IsError)
